@@ -19,7 +19,7 @@ export const getTasks = asyncHandler(async (req: Request, res: Response, next: N
 
 export const getTaskById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const task = await taskService.getTaskById(Number(id));
+    const task = await taskService.getTaskById(id);
     if (task) {
         res.status(200).json(task);
     } else {
@@ -32,7 +32,7 @@ export const updateTask = [
     asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const { id } = req.params;
         const updateTaskDto: UpdateTaskDto = req.body;
-        const task = await taskService.updateTask(Number(id), updateTaskDto);
+        const task = await taskService.updateTask(id, updateTaskDto);
         if (task) {
             res.status(200).json(task);
         } else {
@@ -42,7 +42,7 @@ export const updateTask = [
 
 export const deleteTask = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const success = await taskService.deleteTask(Number(id));
+    const success = await taskService.deleteTask(id);
     if (success) {
         res.status(204).json();
     } else {

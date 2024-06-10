@@ -15,11 +15,11 @@ export const getTasks = async () => {
     return await Task.findAll();
 };
 
-export const getTaskById = async (id: number) => {
+export const getTaskById = async (id: string) => {
     return await Task.findByPk(id);
 };
 
-export const updateTask = async (id: number, updateTaskDto: UpdateTaskDto) => {
+export const updateTask = async (id: string, updateTaskDto: UpdateTaskDto) => {
     const task = await Task.findByPk(id);
     if (task) {
         await task.update(updateTaskDto);
@@ -28,7 +28,7 @@ export const updateTask = async (id: number, updateTaskDto: UpdateTaskDto) => {
     return null;
 };
 
-export const deleteTask = async (id: number) => {
+export const deleteTask = async (id: string) => {
     const task = await Task.findByPk(id);
     if (task) {
         await task.destroy();
