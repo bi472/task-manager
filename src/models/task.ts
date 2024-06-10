@@ -1,11 +1,23 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
+import { v4 as uuidv4 } from 'uuid';
 import { sequelize } from '../config/database';
 import { TaskStatus } from '../types/TaskStatus';
 
-class Task extends Model {
-    public id!: number;
+interface TaskAttributes {
+    id: string;
+    title: string;
+    description?: string;
+    status: TaskStatus;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+interface TaskCreationAttributes extends Optional<TaskAttributes, 'id' | 'status'> {}
+
+class Task extends Model<TaskAttributes, TaskCreationAttributes> implements TaskAttributes {
+    public id!: string;
     public title!: string;
-    public description!: string;
+    public description?: string;
     public status!: TaskStatus;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -13,8 +25,8 @@ class Task extends Model {
 
 Task.init({
     id: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        autoIncrement: true,
+        type: DataTypes.UUID,
+        defaultValue: uuidv4,
         primaryKey: true,
     },
     title: {
@@ -29,7 +41,7 @@ Task.init({
         allowNull: true,
     },
     status: {
-        type: DataTypes.ENUM(...Object.keys(TaskStatus)),
+        type: DataTypes.ENUM(...Object.values(TaskStatus)),
         defaultValue: TaskStatus.IN_PROGRESS,
     },
 }, {
