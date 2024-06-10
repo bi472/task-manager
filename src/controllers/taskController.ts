@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
+import { IdDto } from '../dtos/id.dto';
 import { CreateTaskDto, UpdateTaskDto } from '../dtos/task.dtos';
 import { asyncHandler } from '../handlers/asyncHandler';
-import { validationMiddleware } from '../middleware/validationMiddleware';
+import { paramValidationMiddleware, validationMiddleware } from '../middleware/validationMiddleware';
 import * as taskService from '../services/taskService';
 
 export const createTask = [
@@ -17,17 +18,20 @@ export const getTasks = asyncHandler(async (req: Request, res: Response, next: N
     res.status(200).json(tasks);
 });
 
-export const getTaskById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req.params;
-    const task = await taskService.getTaskById(id);
-    if (task) {
-        res.status(200).json(task);
-    } else {
-        res.status(404).json({ error: 'Task not found' });
-    }
-});
+export const getTaskById = [
+    paramValidationMiddleware(IdDto),
+    asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const { id } = req.params;
+        const task = await taskService.getTaskById(id);
+        if (task) {
+            res.status(200).json(task);
+        } else {
+            res.status(404).json({ error: 'Task not found' });
+        }
+    })];
 
 export const updateTask = [
+    paramValidationMiddleware(IdDto),
     validationMiddleware(UpdateTaskDto),
     asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const { id } = req.params;
@@ -40,12 +44,14 @@ export const updateTask = [
         }
     })];
 
-export const deleteTask = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req.params;
-    const success = await taskService.deleteTask(id);
-    if (success) {
-        res.status(204).json();
-    } else {
-        res.status(404).json({ error: 'Task not found' });
-    }
-});
+export const deleteTask = [
+    paramValidationMiddleware(IdDto),
+    asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const { id } = req.params;
+        const success = await taskService.deleteTask(id);
+        if (success) {
+            res.status(204).json();
+        } else {
+            res.status(404).json({ error: 'Task not found' });
+        }
+    })];

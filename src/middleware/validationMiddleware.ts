@@ -25,3 +25,18 @@ export const validationMiddleware = (type: any): any => {
         });
     };
 };
+
+export const paramValidationMiddleware = (type: any): any => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const dto = plainToInstance(type, req.params);
+
+        validate(dto as any).then((errors: ValidationError[]) => {
+            if (errors.length > 0) {
+                const formattedErrors = formatErrors(errors);
+                res.status(400).json({ errors: formattedErrors });
+            } else {
+                next();
+            }
+        });
+    };
+};
