@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { CreateTaskDto, UpdateTaskDto } from '../dtos/task.dtos';
-import { validationMiddleware } from '../middleware/ValidationMiddleware';
-import { asyncHandler } from '../middleware/asyncHandler';
+import { asyncHandler } from '../handlers/asyncHandler';
+import { validationMiddleware } from '../middleware/validationMiddleware';
 import * as taskService from '../services/taskService';
 
 export const createTask = [

@@ -1,8 +1,9 @@
 import { json } from 'body-parser';
 import dotenv from 'dotenv';
 import express, { Application } from 'express';
+import 'reflect-metadata';
 import { connectDB } from './config/database';
-import { errorHandler } from './middleware/errorHandler';
+import { errorHandler } from './handlers/errorHandler';
 import taskRoutes from './routes/taskRoutes';
 
 dotenv.config();
